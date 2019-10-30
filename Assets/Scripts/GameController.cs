@@ -8,11 +8,8 @@ public class GameController : MonoBehaviour
     
     public Text[] buttonList;
     private string playerSide;
-    //public Button[] edgeButtons;
 
     public Text[] edgeButtons;
-    int whoseTurn;
-    bool clicked;
 
     int[,] rows = new int[24,3] { {0, 1, 2}, {3, 4, 5}, {6, 7, 8},{0, 3, 6}, {1, 4, 7}, 
                                 {2, 5, 8}, {0, 4, 8}, {2, 4, 6}, {9, 0, 1}, {10, 3, 4},
@@ -23,8 +20,6 @@ public class GameController : MonoBehaviour
     //disable extra buttons and edge buttons by default
     void Start ()
     {
-        whoseTurn = 0;
-        clicked = false;
 
         for (int i = 9; i < buttonList.Length; i++)
         {
@@ -56,6 +51,7 @@ public class GameController : MonoBehaviour
         {
             edgeButtons[i].GetComponentInParent<GridSpace>().SetGameControllerReference(this);
         }
+
     }
 
     public string GetPlayerSide ()
@@ -66,21 +62,29 @@ public class GameController : MonoBehaviour
     //change the player's side
     void ChangeSides () 
     {
-        if (whoseTurn == 0)
+
+        if (playerSide == "X")
         { 
-            whoseTurn = 1;
             playerSide = "O"; 
-         if (clicked == true)
-        {
-            whoseTurn = 1;
-            playerSide = "";
-            edgeButtons[0].GetComponent<Text>().text = "";  
-        }
-        } else if (whoseTurn == 1) 
+          
+        } else 
         { 
-            whoseTurn = 0;
             playerSide = "X";
         } 
+
+         for (int i = 0; i < edgeButtons.Length; i++)
+            {
+                edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
+                    if (playerSide == "O")
+                    { 
+                        playerSide = "X"; 
+          
+                    } else 
+                    { 
+                        playerSide = "O";
+                    } 
+                });
+            }
 
     }
 
@@ -100,37 +104,37 @@ public class GameController : MonoBehaviour
     	ChangeSides();
     }
 
-    //disable all buttons(space buttons and edge buttons) when one of the player wins
-    void GameOver () 
-    {
-    	for (int i = 0; i < buttonList.Length; i++)
-    	{
-    		buttonList[i].GetComponentInParent<Button>().interactable = false;    	
-    	}
-    	for (int i = 0; i < edgeButtons.Length; i++)
-    	{
-    		edgeButtons[i].GetComponentInParent<Button>().interactable = false;    	
-    	}
-    }
-
     public void addExtraButton()
     {
-        edgeButtons[0].GetComponentInParent<Button>().onClick.AddListener(delegate() {enableExtraButton();});
-        edgeButtons[1].GetComponentInParent<Button>().onClick.AddListener(delegate() {enableExtraButton2();});
-    }
-
-    //make extra button interactable
-   	public void enableExtraButton() 
-   	{
-    	   buttonList[9].GetComponentInParent<Button>().interactable = true;
-           clicked = true;
-   	}
-    public void enableExtraButton2() 
-    {
-           buttonList[10].GetComponentInParent<Button>().interactable = true;
+         edgeButtons[0].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[9].GetComponentInParent<Button>().interactable = true; 
+            });
+         edgeButtons[1].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[10].GetComponentInParent<Button>().interactable = true; 
+            });
+         edgeButtons[2].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[11].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[3].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[12].GetComponentInParent<Button>().interactable = true; 
+            });
+         edgeButtons[4].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[13].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[5].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[14].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[6].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[15].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[7].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[16].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[8].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[17].GetComponentInParent<Button>().interactable = true;   
+            });
     }
  
-
      //enable an edge button if one of the players fill 2 space grids in a row
     public void enableEdgeButton()
     {
@@ -200,5 +204,18 @@ public class GameController : MonoBehaviour
             edgeButtons[15].GetComponentInParent<Button>().interactable = true;
         }
 
+    }
+
+    //disable all buttons(space buttons and edge buttons) when one of the player wins
+    void GameOver () 
+    {
+        for (int i = 0; i < buttonList.Length; i++)
+        {
+            buttonList[i].GetComponentInParent<Button>().interactable = false;      
+        }
+        for (int i = 0; i < edgeButtons.Length; i++)
+        {
+            edgeButtons[i].GetComponentInParent<Button>().interactable = false;     
+        }
     }
 }
