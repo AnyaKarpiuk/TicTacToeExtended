@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
                                 {21, 2, 5}, {22, 1, 4}, {23, 0, 3}, {24, 0, 4}};
 
     //disable extra buttons and edge buttons by default
-    void Start ()
+    public void Start ()
     {
 
         for (int i = 9; i < buttonList.Length; i++)
@@ -30,28 +30,26 @@ public class GameController : MonoBehaviour
         {
             edgeButtons[i].GetComponentInParent<Button>().interactable = false;
         }
+
      }
 
-    void Awake ()
+    public void Awake ()
     {
+
     	SetGameControllerReferenceOnButton();
         //let a player to fill a grid space from the first click
     	playerSide = "X";
-        //let a player to enable Extra button from the first click on Edge Button
-        addExtraButton();
+
     }
 
-    void SetGameControllerReferenceOnButton()
+    public void SetGameControllerReferenceOnButton()
     {
+
     	for (int i = 0; i < buttonList.Length; i++)
     	{
     		buttonList[i].GetComponentInParent<GridSpace>().SetGameControllerReference(this);
     	}
-        for (int i = 0; i < edgeButtons.Length; i++)
-        {
-            edgeButtons[i].GetComponentInParent<GridSpace>().SetGameControllerReference(this);
-        }
-
+       
     }
 
     public string GetPlayerSide ()
@@ -60,31 +58,33 @@ public class GameController : MonoBehaviour
     }
 
     //change the player's side
-    void ChangeSides () 
+    public  void ChangeSides () 
     {
 
         if (playerSide == "X")
         { 
             playerSide = "O"; 
-          
+             for (int i = 0; i < edgeButtons.Length; i++)
+            {
+                edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
+                    playerSide = "O";
+                });
+            }
+
+            FindObjectOfType<AudioManager>().Play("playerX");
+
         } else 
         { 
             playerSide = "X";
-        } 
-
-         for (int i = 0; i < edgeButtons.Length; i++)
+            for (int i = 0; i < edgeButtons.Length; i++)
             {
                 edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
-                    if (playerSide == "O")
-                    { 
-                        playerSide = "X"; 
-          
-                    } else 
-                    { 
-                        playerSide = "O";
-                    } 
+                    playerSide = "X";
                 });
             }
+
+            FindObjectOfType<AudioManager>().Play("playerO");
+        }
 
     }
 
@@ -106,6 +106,7 @@ public class GameController : MonoBehaviour
 
     public void addExtraButton()
     {
+
          edgeButtons[0].GetComponentInParent<Button>().onClick.AddListener(() => {
                 buttonList[9].GetComponentInParent<Button>().interactable = true; 
             });
@@ -133,6 +134,7 @@ public class GameController : MonoBehaviour
          edgeButtons[8].GetComponentInParent<Button>().onClick.AddListener(() => {
                 buttonList[17].GetComponentInParent<Button>().interactable = true;   
             });
+
     }
  
      //enable an edge button if one of the players fill 2 space grids in a row
