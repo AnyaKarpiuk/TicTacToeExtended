@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     private string playerSide;
 
     public Text[] edgeButtons;
+    public Image[] turns;
 
     int[,] rows = new int[24,3] { {0, 1, 2}, {3, 4, 5}, {6, 7, 8},{0, 3, 6}, {1, 4, 7}, 
                                 {2, 5, 8}, {0, 4, 8}, {2, 4, 6}, {9, 0, 1}, {10, 3, 4},
@@ -71,7 +72,13 @@ public class GameController : MonoBehaviour
                 });
             }
 
+            //play sound when player X presses a button
             FindObjectOfType<AudioManager>().Play("playerX");
+
+            //make X's leaf bigger
+            var rectTransform = gameObject.transform as RectTransform;
+            turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
+            turns[1].rectTransform.sizeDelta = new Vector2(80, 100);
 
         } else 
         { 
@@ -83,7 +90,13 @@ public class GameController : MonoBehaviour
                 });
             }
 
+            //play sound when player O presses a button
             FindObjectOfType<AudioManager>().Play("playerO");
+
+            //make O's leaf bigger
+            turns[1].rectTransform.sizeDelta = new Vector2(140, 160);
+            turns[0].rectTransform.sizeDelta = new Vector2(80, 100);
+
         }
 
     }
