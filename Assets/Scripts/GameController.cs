@@ -2,21 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     
     public Text[] buttonList;
     private string playerSide;
+    public GameObject gameOverPanel;
+    public Text winningText;
+    public Button startAgain;
 
     public Text[] edgeButtons;
     public Image[] turns;
 
-    int[,] rows = new int[24,3] { {0, 1, 2}, {3, 4, 5}, {6, 7, 8},{0, 3, 6}, {1, 4, 7}, 
+    int[,] rows = new int[40,3] { {0, 1, 2}, {3, 4, 5}, {6, 7, 8},{0, 3, 6}, {1, 4, 7}, 
                                 {2, 5, 8}, {0, 4, 8}, {2, 4, 6}, {9, 0, 1}, {10, 3, 4},
                                 {11, 6, 7}, {12, 6, 4}, {13, 6, 3}, {14, 7, 4}, {15, 8, 5},
                                 {16, 8, 4}, {17, 8, 7}, {18, 5, 4}, {19, 2, 1}, {20, 2, 4},
-                                {21, 2, 5}, {22, 1, 4}, {23, 0, 3}, {24, 0, 4}};
+                                {21, 2, 5}, {22, 1, 4}, {23, 0, 3}, {24, 0, 4}, {24, 9, 10},
+                                {9, 10, 11}, {10, 11, 12}, {12, 13, 14}, {13, 14, 15},
+                                {14, 15, 16}, {16, 17, 18}, {17, 18, 19}, {18, 19, 20},
+                                {20, 21, 22}, {21, 22, 23}, {22, 23, 24}, {10, 6, 14},
+                                {18, 8, 14}, {22, 2, 18}, {22, 0, 10}};
 
     //disable extra buttons and edge buttons by default
     public void Start ()
@@ -40,6 +48,9 @@ public class GameController : MonoBehaviour
     	SetGameControllerReferenceOnButton();
         //let a player to fill a grid space from the first click
     	playerSide = "X";
+        //make X's icon large by default
+        turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
+        gameOverPanel.SetActive(false);
 
     }
 
@@ -147,6 +158,27 @@ public class GameController : MonoBehaviour
          edgeButtons[8].GetComponentInParent<Button>().onClick.AddListener(() => {
                 buttonList[17].GetComponentInParent<Button>().interactable = true;   
             });
+         edgeButtons[9].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[18].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[10].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[19].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[11].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[20].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[12].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[21].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[13].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[22].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[14].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[23].GetComponentInParent<Button>().interactable = true;   
+            });
+         edgeButtons[15].GetComponentInParent<Button>().onClick.AddListener(() => {
+                buttonList[24].GetComponentInParent<Button>().interactable = true;   
+            });
 
     }
  
@@ -224,6 +256,7 @@ public class GameController : MonoBehaviour
     //disable all buttons(space buttons and edge buttons) when one of the player wins
     void GameOver () 
     {
+
         for (int i = 0; i < buttonList.Length; i++)
         {
             buttonList[i].GetComponentInParent<Button>().interactable = false;      
@@ -232,5 +265,14 @@ public class GameController : MonoBehaviour
         {
             edgeButtons[i].GetComponentInParent<Button>().interactable = false;     
         }
+
+        //display a winner
+        gameOverPanel.SetActive(true);
+        winningText.text = playerSide + "  WINS !";
+
+        startAgain.onClick.AddListener(() => {
+                SceneManager.LoadScene(0);
+            });
+
     }
 }
