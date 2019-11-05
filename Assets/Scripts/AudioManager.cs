@@ -14,16 +14,14 @@ public class AudioManager : MonoBehaviour
    void Awake() 
    {
 
-	if (instance == null)
-	{
-		instance = this;
-	} else 
-	{
-		Destroy (gameObject);
-		return;
-	}
-
-	DontDestroyOnLoad (gameObject);
+	  if (instance != null && instance != this)
+	  {
+         Destroy (this.gameObject);
+         return;
+	  } else 
+	  {
+         instance = this;
+	  }
 
    	foreach(Sound s in sounds)
    	{
@@ -38,12 +36,6 @@ public class AudioManager : MonoBehaviour
    public void Play(string name) 
    {
    	Sound s = Array.Find(sounds, sound => sound.name == name);
-
-   	if (s == null)
-   	{
-   		Debug.LogWarning("Sound: " + name + " not found!");
-   		return;
-   	}
 
    	s.source.Play();
 

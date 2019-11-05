@@ -16,15 +16,14 @@ public class GameController : MonoBehaviour
     public Text[] edgeButtons;
     public Image[] turns;
 
-    int[,] rows = new int[40,3] { {0, 1, 2}, {3, 4, 5}, {6, 7, 8},{0, 3, 6}, {1, 4, 7}, 
-                                {2, 5, 8}, {0, 4, 8}, {2, 4, 6}, {9, 0, 1}, {10, 3, 4},
-                                {11, 6, 7}, {12, 6, 4}, {13, 6, 3}, {14, 7, 4}, {15, 8, 5},
-                                {16, 8, 4}, {17, 8, 7}, {18, 5, 4}, {19, 2, 1}, {20, 2, 4},
-                                {21, 2, 5}, {22, 1, 4}, {23, 0, 3}, {24, 0, 4}, {24, 9, 10},
-                                {9, 10, 11}, {10, 11, 12}, {12, 13, 14}, {13, 14, 15},
-                                {14, 15, 16}, {16, 17, 18}, {17, 18, 19}, {18, 19, 20},
-                                {20, 21, 22}, {21, 22, 23}, {22, 23, 24}, {10, 6, 14},
-                                {18, 8, 14}, {22, 2, 18}, {22, 0, 10}};
+    int[,] rows = new int[48,3] { {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, 
+                                {2, 4, 6}, {9, 0, 1}, {10, 3, 4}, {11, 6, 7}, {12, 6, 4}, {13, 6, 3}, {14, 7, 4}, 
+                                {15, 8, 5}, {16, 8, 4}, {17, 8, 7}, {18, 5, 4}, {19, 2, 1}, {20, 2, 4}, {21, 2, 5}, 
+                                {22, 1, 4}, {23, 0, 3}, {24, 0, 4}, {24, 9, 10}, {9, 10, 11}, {10, 11, 12}, 
+                                {12, 13, 14}, {13, 14, 15}, {14, 15, 16}, {16, 17, 18}, {17, 18, 19}, {18, 19, 20},
+                                {20, 21, 22}, {21, 22, 23}, {22, 23, 24}, {10, 6, 14}, {18, 8, 14}, {22, 2, 18}, 
+                                {22, 0, 10}, {9, 3, 7}, {3, 7, 15}, {19, 5, 7}, {5, 7, 13}, {23, 1, 5}, {1, 5, 17}, 
+                                {21, 1, 3}, {1, 3, 11}};
 
     //disable extra buttons and edge buttons by default
     public void Start ()
@@ -50,6 +49,7 @@ public class GameController : MonoBehaviour
     	playerSide = "X";
         //make X's icon large by default
         turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
+
         gameOverPanel.SetActive(false);
 
     }
@@ -61,6 +61,10 @@ public class GameController : MonoBehaviour
     	{
     		buttonList[i].GetComponentInParent<GridSpace>().SetGameControllerReference(this);
     	}
+        for (int i = 0; i < edgeButtons.Length; i++)
+        {
+            edgeButtons[i].GetComponentInParent<GridSpace>().SetGameControllerReference(this);
+        }
        
     }
 
@@ -76,40 +80,50 @@ public class GameController : MonoBehaviour
         if (playerSide == "X")
         { 
             playerSide = "O"; 
-             for (int i = 0; i < edgeButtons.Length; i++)
-            {
-                edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
-                    playerSide = "O";
-                });
-            }
-
-            //play sound when player X presses a button
-            FindObjectOfType<AudioManager>().Play("playerX");
-
-            //make X's leaf bigger
-            var rectTransform = gameObject.transform as RectTransform;
-            turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
-            turns[1].rectTransform.sizeDelta = new Vector2(80, 100);
-
         } else 
         { 
             playerSide = "X";
-            for (int i = 0; i < edgeButtons.Length; i++)
-            {
+        }
+
+        //if a player presses an Edge Button he skips a turn
+        for (int i = 0; i < edgeButtons.Length; i++)
+        {
+            if ( playerSide == "O"){
                 edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
                     playerSide = "X";
+
+                    changeTurnIconsAndMusic();
+                });
+            } else {
+                edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
+                    playerSide = "O";
+
+                    changeTurnIconsAndMusic();
                 });
             }
+        }
 
+        changeTurnIconsAndMusic();
+    }
+
+    //chang the size of icons 
+    public void changeTurnIconsAndMusic()
+    {
+        if (playerSide == "X")
+        {
+            //play sound when player X presses a button
+            FindObjectOfType<AudioManager>().Play("playerX");
+
+            turns[1].rectTransform.sizeDelta = new Vector2(140, 160);
+            turns[0].rectTransform.sizeDelta = new Vector2(80, 100);
+        } else 
+        {
             //play sound when player O presses a button
             FindObjectOfType<AudioManager>().Play("playerO");
 
-            //make O's leaf bigger
-            turns[1].rectTransform.sizeDelta = new Vector2(140, 160);
-            turns[0].rectTransform.sizeDelta = new Vector2(80, 100);
-
+            turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
+            turns[1].rectTransform.sizeDelta = new Vector2(80, 100);
         }
-
     }
 
     //end the game if one player fill 3 grid space in a row
@@ -270,6 +284,7 @@ public class GameController : MonoBehaviour
         gameOverPanel.SetActive(true);
         winningText.text = playerSide + "  WINS !";
 
+        //load a main menu scene when MenuButton is pressed
         startAgain.onClick.AddListener(() => {
                 SceneManager.LoadScene(0);
             });
