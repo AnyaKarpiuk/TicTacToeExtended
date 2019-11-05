@@ -1,10 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GameController : MonoBehaviour
+public class GameController3 : MonoBehaviour
 {
     
     public Text[] buttonList;
@@ -59,12 +59,8 @@ public class GameController : MonoBehaviour
 
     	for (int i = 0; i < buttonList.Length; i++)
     	{
-    		buttonList[i].GetComponentInParent<GridSpace>().SetGameControllerReference(this);
+    		buttonList[i].GetComponentInParent<GridSpace3>().SetGameControllerReference(this);
     	}
-        for (int i = 0; i < edgeButtons.Length; i++)
-        {
-            edgeButtons[i].GetComponentInParent<GridSpace>().SetGameControllerReference(this);
-        }
        
     }
 
@@ -80,28 +76,40 @@ public class GameController : MonoBehaviour
         if (playerSide == "X")
         { 
             playerSide = "O"; 
-        } else 
+        } else if (playerSide == "O")
         { 
-            playerSide = "X";
+            playerSide = "V";
+        } else 
+        {
+        	playerSide = "X";
         }
 
         //if a player presses an Edge Button he skips a turn
         for (int i = 0; i < edgeButtons.Length; i++)
         {
-            if ( playerSide == "O"){
-                edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
-                    playerSide = "X";
-
-                    changeTurnIconsAndMusic();
-                });
-            } else {
+            if ( playerSide == "X")
+            {
                 edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
                     playerSide = "O";
 
                     changeTurnIconsAndMusic();
                 });
-            }
+            } else if (playerSide == "O")
+            {
+                edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
+                    playerSide = "V";
+
+                    changeTurnIconsAndMusic();
+                });
+            } else 
+            {
+                edgeButtons[i].GetComponentInParent<Button>().onClick.AddListener(() => {
+                    playerSide = "X";
+
+                    changeTurnIconsAndMusic();
+                });
         }
+    }
 
         changeTurnIconsAndMusic();
     }
@@ -113,16 +121,24 @@ public class GameController : MonoBehaviour
         {
             //play sound when player X presses a button
             FindObjectOfType<AudioManager>().Play("playerX");
-
-            turns[1].rectTransform.sizeDelta = new Vector2(140, 160);
+            
             turns[0].rectTransform.sizeDelta = new Vector2(80, 100);
-        } else 
+            turns[1].rectTransform.sizeDelta = new Vector2(80, 100);
+            turns[2].rectTransform.sizeDelta = new Vector2(140, 160);
+        } else if (playerSide == "O")
         {
             //play sound when player O presses a button
             FindObjectOfType<AudioManager>().Play("playerO");
 
             turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
             turns[1].rectTransform.sizeDelta = new Vector2(80, 100);
+            turns[2].rectTransform.sizeDelta = new Vector2(80, 100);
+        } else {
+        	FindObjectOfType<AudioManager>().Play("playerO");
+
+            turns[0].rectTransform.sizeDelta = new Vector2(80, 100);
+            turns[1].rectTransform.sizeDelta = new Vector2(140, 160);
+            turns[2].rectTransform.sizeDelta = new Vector2(80, 100);
         }
     }
 
@@ -292,3 +308,4 @@ public class GameController : MonoBehaviour
 
     }
 }
+

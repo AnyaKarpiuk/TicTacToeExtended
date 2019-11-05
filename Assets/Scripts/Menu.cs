@@ -16,4 +16,9 @@ public class Menu : MonoBehaviour
     	SceneManager.LoadScene(1);
     }
 
+    public void startThreePlayersGame()
+    {
+    	SceneManager.LoadScene(2);
+    }
+
 }
