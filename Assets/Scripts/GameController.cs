@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour
     public GameObject gameOverPanel;
     public Text winningText;
     public Button startAgain;
+    public Button menuButton;
 
     public Text[] edgeButtons;
     public Image[] turns;
@@ -48,7 +49,7 @@ public class GameController : MonoBehaviour
         //let a player to fill a grid space from the first click
     	playerSide = "X";
         //make X's icon large by default
-        turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
+        turns[0].rectTransform.sizeDelta = new Vector2(180, 180);
 
         gameOverPanel.SetActive(false);
 
@@ -114,15 +115,15 @@ public class GameController : MonoBehaviour
             //play sound when player X presses a button
             FindObjectOfType<AudioManager>().Play("playerX");
 
-            turns[1].rectTransform.sizeDelta = new Vector2(140, 160);
-            turns[0].rectTransform.sizeDelta = new Vector2(80, 100);
+            turns[1].rectTransform.sizeDelta = new Vector2(180, 180);
+            turns[0].rectTransform.sizeDelta = new Vector2(80, 80);
         } else 
         {
             //play sound when player O presses a button
             FindObjectOfType<AudioManager>().Play("playerO");
 
-            turns[0].rectTransform.sizeDelta = new Vector2(140, 160);
-            turns[1].rectTransform.sizeDelta = new Vector2(80, 100);
+            turns[0].rectTransform.sizeDelta = new Vector2(180, 180);
+            turns[1].rectTransform.sizeDelta = new Vector2(80, 80);
         }
     }
 
@@ -280,6 +281,7 @@ public class GameController : MonoBehaviour
         {
             edgeButtons[i].GetComponentInParent<Button>().interactable = false;     
         }
+        menuButton.interactable = false;
 
         //display a winner
         gameOverPanel.SetActive(true);

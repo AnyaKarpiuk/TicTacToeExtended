@@ -21,4 +21,18 @@ public class Menu : MonoBehaviour
     	SceneManager.LoadScene(2);
     }
 
+    public void startTutorial()
+    {
+        SceneManager.LoadScene(3);
+    }
+
+    public void returnToMenu () 
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void ExitGame () {
+        Application.Quit();
+    }
+
 }
