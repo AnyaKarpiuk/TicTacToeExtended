@@ -22,6 +22,6 @@ The game is available for 2 or 3 players.
 
 ## Play
 
-Tica Tac Toe extended is available on:
+Tic Tac Toe extended is available on:
 
 https://simmer.io/@AnyaKarpiuk/tic-tac-toe-extended
